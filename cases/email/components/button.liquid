@@ -1,0 +1,2 @@
+{% assign bg = block.params.style.background | default: theme.colors.primary %}
+<a href="{{ block.params.href | append: '?uid=' | append: user.id }}" style="background:{{ bg }};color:{{ block.params.style.color | default: '#fff' }};border-radius:{{ block.params.style.radius | default: theme.radius }}px;padding:{{ theme.spacing.sm }}px {{ theme.spacing.md }}px">{{ block.params.label | upcase }}</a>

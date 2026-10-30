@@ -1,0 +1,15 @@
+{
+  "name": "liquidjs-perf-repro",
+  "private": true,
+  "description": "A/B benchmark + CPU profiles: liquidjs npm release vs a PR branch",
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "bench": "node bench.js",
+    "bench:async": "node bench.js --async",
+    "profile": "node profile.js",
+    "all": "npm run setup && npm run bench && npm run bench:async && npm run profile"
+  },
+  "dependencies": {
+    "liquidjs": "10.30.1"
+  }
+}

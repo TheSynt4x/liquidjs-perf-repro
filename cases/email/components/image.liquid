@@ -1,0 +1,1 @@
+<img src="{{ block.params.src }}" alt="{{ block.params.alt | escape }}" width="{{ block.params.width | default: 600 }}" style="display:block;max-width:{{ theme.layout.maxWidth }}px{% if block.params.rounded %};border-radius:{{ theme.radius }}px{% endif %}">

@@ -1,0 +1,13 @@
+<tr class="row-{{ index }} {% if row.settings.fullWidth %}full{% endif %}" style="padding:{{ row.settings.padding | default: theme.spacing.md }}px;background:{{ row.settings.background | default: theme.colors.surface }}">
+{% for col in row.columns %}
+  <td width="{{ col.width | default: 100 }}%" style="vertical-align:{{ col.settings.align | default: 'top' }}">
+  {% for block in col.blocks %}
+    {% case block.type %}
+    {% when 'text' %}{% render 'components/text', block: block, theme: theme, user: user %}
+    {% when 'button' %}{% render 'components/button', block: block, theme: theme, user: user %}
+    {% when 'image' %}{% render 'components/image', block: block, theme: theme %}
+    {% endcase %}
+  {% endfor %}
+  </td>
+{% endfor %}
+</tr>

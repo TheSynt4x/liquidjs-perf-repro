@@ -1,0 +1,9 @@
+<html><body style="background:{{ theme.colors.background }}">
+<h1>{{ email.subject | escape }}</h1>
+{% for row in email.rows %}
+  {% if row.visible != false %}
+  {% render 'components/row', row: row, theme: theme, user: user, index: forloop.index %}
+  {% endif %}
+{% endfor %}
+<footer>{{ email.footer.text | default: 'Unsubscribe' }} &copy; {{ email.footer.year }}</footer>
+</body></html>

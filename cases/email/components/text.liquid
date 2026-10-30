@@ -1,0 +1,4 @@
+<p style="color:{{ block.params.style.color | default: theme.colors.text }};font-size:{{ block.params.style.fontSize | default: theme.font.size }}px;font-family:{{ block.params.style.fontFamily | default: theme.font.family }}">
+{% if block.params.greeting and user.firstName %}Hi {{ user.firstName | capitalize }},{% endif %}
+{{ block.params.content | replace: '{name}', user.firstName | strip }}
+</p>
