@@ -3,7 +3,7 @@
 A/B benchmark and CPU profiles comparing the published `liquidjs@10.30.1` against a PR branch.
 
 - **baseline**: `liquidjs@10.30.1` from npm (pinned in `package.json`)
-- **candidate**: `perf/sync-yield-overhead` from https://github.com/TheSynt4x/liquidjs, cloned and built by `npm run setup`
+- **candidate**: `perf/render-limit-and-loader` from https://github.com/TheSynt4x/liquidjs, cloned and built by `npm run setup`
 
 ## Run it
 
@@ -45,24 +45,27 @@ Overrides:
 
 ## Results
 
-Node v24.21.0, Linux, Intel i7-1255U, candidate `perf/sync-yield-overhead @ 54c7d84`.
+Node v24.21.0, Linux, Intel i7-1255U, candidate `perf/render-limit-and-loader` (applied to upstream `master` on its own, independent of `perf/sync-yield-overhead`).
 
 | case | mode | 10.30.1 | candidate | speedup |
 |---|---|---|---|---|
-| email-components | sync | 6.76 ms | 3.53 ms | **1.91x** |
-| upstream-todolist | sync | 84.4 µs | 47.0 µs | **1.79x** |
-| email-components | async | 11.40 ms | 4.75 ms | **2.40x** |
-| upstream-todolist | async | 138.8 µs | 65.0 µs | **2.14x** |
+| email-components | sync | 6.84 ms | 6.56 ms | **1.04x** |
+| upstream-todolist | sync | 82.3 µs | 77.5 µs | **1.06x** |
+| email-components | async | 10.87 ms | 10.47 ms | **1.04x** |
+| upstream-todolist | async | 124.2 µs | 116.3 µs | **1.07x** |
 
-A/A control (`BASELINE` = candidate build): 0.97x and 1.00x, so noise is about ±3%.
+A/A control (`BASELINE` = candidate build): 1.00x and 1.00x.
 
-### Profile: self time as a share of time inside liquidjs (email-components)
+On top of `perf/sync-yield-overhead` (both patches applied to `master`, compared with that branch alone), the same change is worth **1.10x** (email-components) and **1.12x** (upstream-todolist) sync, because it removes a fixed per-node cost that becomes a larger share once the generator overhead is gone.
 
-| function | 10.30.1 | candidate |
-|---|---|---|
-| `toValueSync` | 46.5% | 18.8% |
-| `isIterator` | 9.3% | 3.1% |
-| `evalTokenValue` | 2.0% | 0.0% |
-| max `toValueSync` recursion depth | 25 | 19 |
+### Profile: self time as a share of time inside liquidjs
 
-The other functions' *shares* rise because the total shrank by half. Their absolute time is about flat.
+| function | case | 10.30.1 | candidate |
+|---|---|---|---|
+| `performance.now` (native) | upstream-todolist | 3.0% | 0.0% |
+| `getPerformance` | upstream-todolist | 1.7% | 0.0% |
+| `performance.now` (native) | email-components | 1.8% | 0.0% |
+| `getPerformance` | email-components | 1.1% | 0.0% |
+| `Loader` constructor | email-components | 0.9% | 0.1% |
+
+Results for the earlier PR are on the [`perf/sync-yield-overhead`](https://github.com/TheSynt4x/liquidjs-perf-repro/tree/perf/sync-yield-overhead) branch.
